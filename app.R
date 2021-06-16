@@ -35,16 +35,14 @@ ui <- fluidPage(
       
       p("Welcome friend, here are some searching filters you may need:"),
       
-      checkboxGroupInput("subjects",
-       # offer options to select groups of subjects
+      checkboxGroupInput("subjects", # offer options to select groups of subjects
                          label = "Who are you interested in?",
                          choices = list("Children" = 1, 
                                         "Mothers" = 2, 
                                         "Partners" = 3),
-                         selected = 1),
+                          selected = 1),
       
-      checkboxGroupInput("datatype",
-       # offer options to select data type
+      checkboxGroupInput("datatype",  # offer options to select data type
                          label = "What data type(s) are you looking for?",
                          choices = list("Questionnaires" = 1, 
                                         "Brain imaging" = 2, 
@@ -60,10 +58,7 @@ ui <- fluidPage(
       textInput(inputId = "keyword", # this takes input text to feed the search. 
                 label = "What are you searching for?",
                 value = ""),
-      
-      actionButton("update", "Search!") # to defer the rendering of output until the
-        # the user explicitly clicks (rather than immediately when inputs change).
-        # this will save computational time!
+    
     ),
     
     # Main panel for displaying outputs ----------------------------------------
@@ -91,13 +86,15 @@ ui <- fluidPage(
 ################################################################################
 
 server <- function(input, output) {
+  
   output$selected_data_type <- renderText({ 
     paste("You have selected", ifelse(input$datatype == 1, "questionnaires", "brain data"), 
     "about", ifelse(input$subjects == 1, "children", "mothers"), "ranging from",
           input$timerange[1], "to", input$timerange[2])})
 
   output$view <- renderTable({
-    searchselection(t, subj = input$subjects, timeframe = input$timerange, keyword = input$keyword)
+    searchselection(t = qsum, subj = input$subjects, 
+                    timeframe = c(input$timerange[1], input$timerange[2]), keyword = input$keyword)
   })
 }
     
