@@ -2,12 +2,10 @@
 # 
 
 searchselection <- function(t, subj = 'any', timeframe = 'any', keyword = "") {
-  if (timeframe[1] == "Prenatal" & timeframe[2] == '17y') {
-    times = colnames(t)[2:length(colnames(t))]
+  if (timeframe[1] != timeframe[2]) {
+    times = colnames(t)[which(colnames(t) == timeframe[1]):which(colnames(t) == timeframe[2])]
   } else if (timeframe[1] == timeframe[2]){
     times = c(timeframe[1])
-  } else if (timeframe[1] != timeframe[2]){
-    times = colnames(t)[which(colnames(t) == timeframe[1]):which(colnames(t) == timeframe[2])]
   }
   outt = t[, c('Measurement', times)]
   
