@@ -63,19 +63,25 @@ ui <- fluidPage(
     
     # Main panel for displaying outputs ----------------------------------------
     mainPanel(
-      
-      h4(textOutput("selected_data_type")),
-      h4(textOutput("selected_subjects")),
-      h4(textOutput("min_max")),
-      
-      br(), 
-      
-      tableOutput("view"),
-      
-      a("https://generationr.nl/"), # Hyperlink to generation R website
-      img(src = "generation-r-logo.png", height = 140, 
-          style="display: block; margin-left: auto; margin-right: 0;")
-      
+      tabsetPanel(
+        tabPanel("Overview", 
+                 
+                 h4(textOutput("selected_data_type")),
+                 h4(textOutput("selected_subjects")),
+                 h4(textOutput("min_max")),
+                 
+                 br(), 
+                 
+                 tableOutput("view"),
+                 
+                 a("https://generationr.nl/"), # Hyperlink to generation R website
+                 img(src = "generation-r-logo.png", height = 140, 
+                     style="display: block; margin-left: auto; margin-right: 0;") 
+                 ),
+        
+        tabPanel("Data dictionary") 
+                 #h4("This one is still in progress, hold tight")),
+      )
     )
   )
 )
