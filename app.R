@@ -5,6 +5,7 @@
 # import the libraries we are going to need
 library(shiny)
 library(shinyWidgets)
+library(shinyTree)
 
 # point to the script the does the search 
 source("search.R")

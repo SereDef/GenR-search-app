@@ -7,7 +7,7 @@ searchselection <- function(t, subj = 'any', timeframe = 'any', keyword = "") {
   } else if (timeframe[1] == timeframe[2]){
     times = c(timeframe[1])
   }
-  outt = t[, c('Measurement', times)]
+  outt = t[, c('Category', 'Measurement', times)]
   
   newx = c()
   sel = c()
@@ -31,10 +31,16 @@ searchselection <- function(t, subj = 'any', timeframe = 'any', keyword = "") {
   pos <- c()
   
   if (keyword != "") { 
-    kws <- strsplit(keyword, ";")[[1]]
+    kws <- strsplit(keyword, ";")[[1]] # Split input based on ";"
+    kws <- kws[!kws == " "] # Avoid just spaces (when typing)
     for (k in kws) {
-      pos <- c(pos, which(mapply(grepl, k, outt$Measurement, ignore.case = T))) }
-    outt = outt[pos, ] 
+      clean_k <- gsub("^\\s+|\\s+$", "", k) # Returns string without leading or trailing white space
+      pos <- c(pos, unname(which(mapply(grepl, clean_k, outt$Measurement, ignore.case = T))))
+      pos <- c(pos, unname(which(mapply(grepl, clean_k, outt$Category, ignore.case = T)))) }
+    outt = outt[unique(pos), ] 
   } 
+  
+  outt<- outt[,-1] # get rid of Category column
+  
   return(outt)
 }

@@ -10,10 +10,11 @@ The app requires [R](http://cran.r-project.org/) (version >= 4.0.3) and the foll
 
 * [shiny](http://cran.r-project.org/package=shiny) (version >= 1.6.0)
 * [shinyWidgets](https://cran.r-project.org/package=shinyWidgets) (version >= 0.6.0)
+* [shinyTree](https://CRAN.R-project.org/package=shinyTree) (version >= 0.2.7)
 
 These packages can be installed using the following function call:
 ```r
-install.packages(c("shiny", "shinyWidgets"), dependencies = TRUE)
+install.packages(c("shiny", "shinyWidgets", "shinyTree"), dependencies = TRUE)
 ```
 and then the app can be directly invoked using the command:
 ```r
