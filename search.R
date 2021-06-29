@@ -10,18 +10,31 @@ searchselection <- function(t, subj = 'any', timeframe = 'any', keyword = "") {
   outt = t[, c('Measurement', times)]
   
   newx = c()
+  sel = c()
   
-  sel = ifelse(subj == 1, 'C', ifelse(subj == 2, 'M', 'P'))
+  if (any(mapply(grepl, c('Self.reports...ancestry...c..Child'), subj, ignore.case = F))) { sel <- c(sel, 'Cs') }
+  if (any(mapply(grepl, c('Main.caregiver.reports...ancestry...c..Child'), subj, ignore.case = F))) { sel <- c(sel, 'Cm') }
+  if (any(mapply(grepl, c('Teacher.reports...ancestry...c..Child'), subj, ignore.case = F))) { sel <- c(sel, 'Ct') }
+  if (any(mapply(grepl, 'Questionnaires...ancestry....Mothers', subj, ignore.case = F)))  { sel <- c(sel, 'M') }
+  if (any(mapply(grepl, 'Questionnaires...ancestry....Partners', subj, ignore.case = F))) { sel <- c(sel, 'P') }
   
   for (i in as.numeric(rownames(outt))) {
-    if (any(mapply(grepl, sel, outt[i, times], ignore.case = F))) {
+    for (s in sel){
+      if (any(mapply(grepl, s, outt[i, times], ignore.case = F))) {
         newx <- c(newx, i) 
-    }  
+      } 
+    }
   }
   
-  if (subj != 'any') { outt = outt[newx, ] }
+  if (length(subj) < 25) { outt = outt[unique(newx), ] }
   
-  if (keyword != "") { outt = outt[which(mapply(grepl, keyword, outt$Measurement, ignore.case = T)), ] }
-    
+  pos <- c()
+  
+  if (keyword != "") { 
+    kws <- strsplit(keyword, ";")[[1]]
+    for (k in kws) {
+      pos <- c(pos, which(mapply(grepl, k, outt$Measurement, ignore.case = T))) }
+    outt = outt[pos, ] 
+  } 
   return(outt)
 }

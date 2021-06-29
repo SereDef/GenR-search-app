@@ -24,7 +24,10 @@ years = c("Prenatal", "2.6m", "1y", "1.5y", "2y", "3y", "4y", "6y", "8y", "10y",
   
 ui <- fluidPage(
   
-  titlePanel("Generation R Search Engine"), # Add title panel
+  titlePanel(h1("Generation R Search Engine", # Add title panel
+                style='font-family:verdana; font-weight: bold; font-size:30pt;
+                color:#0C3690; background-color:#B6CCE7;
+                padding: 10px 20px 10px 30px;')), 
   
   sidebarLayout( # Define a sidebar panel and a main panel layout 
                  # with input and output definitions respectively 
@@ -33,30 +36,26 @@ ui <- fluidPage(
     # Main panel for displaying inputs -----------------------------------------
     sidebarPanel( 
       
-      p("Welcome friend, here are some searching filters you may need:"),
+      p("Hello friend, welcome to the beautiful universe of Generation R data. 
+        Looking for something in particular? Here are some searching filters you may find useful:"),
+      br(),
       
-      checkboxGroupInput("subjects", # offer options to select groups of subjects
-                         label = "Who are you interested in?",
-                         choices = list("Children" = 1, 
-                                        "Mothers" = 2, 
-                                        "Partners" = 3),
-                          selected = 1),
+      h4('Who / what are you interested in?'),
+      shinyTree("tree", theme = 'proton', themeIcons = F, checkbox = TRUE),
       
-      checkboxGroupInput("datatype",  # offer options to select data type
-                         label = "What data type(s) are you looking for?",
-                         choices = list("Questionnaires" = 1, 
-                                        "Brain imaging" = 2, 
-                                        "Biological samples" = 3),
-                         selected = 1),
+      br(),
       
+      h4('When / in what time range?'),
       shinyWidgets::sliderTextInput( # Specify the age range within which to search for data 
-        inputId = "timerange", label = "Time Range (child age in years):", 
+        inputId = "timerange", label = "Note: i.e. child age in years", 
         choices = years, selected = c("Prenatal", "17y"), 
-        grid = TRUE
-      ),
+        grid = TRUE),
       
+      br(),
+      
+      h4('What are you searching for?'),
       textInput(inputId = "keyword", # this takes input text to feed the search. 
-                label = "What are you searching for?",
+                label = "Type in some keywords. Separate them with a ; ",
                 value = ""),
     
     ),
@@ -66,9 +65,9 @@ ui <- fluidPage(
       tabsetPanel(
         tabPanel("Overview", 
                  
-                 h4(textOutput("selected_data_type")),
-                 h4(textOutput("selected_subjects")),
-                 h4(textOutput("min_max")),
+                 # h4(textOutput("selected_data_type")),
+                 # h4(textOutput("selected_subjects")),
+                 # h4(textOutput("min_max")),
                  
                  br(), 
                  
@@ -93,13 +92,32 @@ ui <- fluidPage(
 
 server <- function(input, output) {
   
-  output$selected_data_type <- renderText({ 
-    paste("You have selected", ifelse(input$datatype == 1, "questionnaires", "brain data"), 
-    "about", ifelse(input$subjects == 1, "children", "mothers"), "ranging from",
-          input$timerange[1], "to", input$timerange[2])})
-
+  output$tree <- renderTree({ list(
+    'Children'= list('Questionnaires'   =  structure(list('Self reports'= 11, 
+                                                          'Main caregiver reports'= 12, 
+                                                          'Teacher reports'= 13), stselected=TRUE),
+                     'Measurements'   =  structure(list('Cognitive tasks'= 14, 
+                                                        'Morphology'= 15)), 
+                     'Biological samples'   =  structure(list('Neuroimaging'= 16, 
+                                                              'Genetics'= 17))),
+    'Mothers'= list('Questionnaires' =  21,
+                    'Measurements' = structure(list('Cognitive tasks'= 22, 
+                                                    'Morphology'= 23)), 
+                    'Biological samples'   =  structure(list('Neuroimaging'= 24, 
+                                                             'Genetics'= 25))), 
+    'Partners'= list('Questionnaires' =  31,
+                     'Measurements'   = 32, 
+                     'Biological samples'  =  structure(list('Neuroimaging'=34, 
+                                                             'Genetics'=35)))) 
+  })
+  
+  # output$selected_data_type <- renderText({ 
+  #   paste("You have selected", ifelse(input$datatype == 1, "questionnaires", "brain data"), 
+  #   "about", ifelse(input$subjects == 1, "children", "mothers"), "ranging from",
+  #         input$timerange[1], "to", input$timerange[2])})
+  
   output$view <- renderTable({
-    searchselection(t = qsum, subj = input$subjects, 
+    searchselection(t = qsum, subj = names(as.data.frame(get_selected(input$tree, format = "names"))), 
                     timeframe = c(input$timerange[1], input$timerange[2]), keyword = input$keyword)
   })
 }
