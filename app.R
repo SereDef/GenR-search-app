@@ -25,7 +25,7 @@ years = c("Prenatal", "2.6m", "1y", "1.5y", "2y", "3y", "4y", "6y", "8y", "10y",
   
 ui <- fluidPage(
   
-  titlePanel(h1("Generation R Search Engine", # Add title panel
+  titlePanel(h1("GuRu: Generation R search engine", # Add title panel
                 style='font-family:verdana; font-weight: bold; font-size:30pt;
                 color:#0C3690; background-color:#B6CCE7;
                 padding: 10px 20px 10px 30px;')), 
@@ -79,7 +79,8 @@ ui <- fluidPage(
                      style="display: block; margin-left: auto; margin-right: 0;") 
                  ),
         
-        tabPanel("Data dictionary") 
+        tabPanel("Data dictionary"),
+        tabPanel("Cohort information")
                  #h4("This one is still in progress, hold tight")),
       )
     )
