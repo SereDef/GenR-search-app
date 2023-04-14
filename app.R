@@ -80,7 +80,17 @@ ui <- fluidPage(
                  ),
         
         tabPanel("Data dictionary"),
-        tabPanel("Cohort information")
+        tabPanel("Cohort information", 
+                 br(),
+                 a('Generation R website', "https://generationr.nl/"), # Hyperlink to generation R website
+                 br(),
+                 br(),
+                 a('The Generation R Study: design and cohort update 2017', 
+                   'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5233749/'),
+                 br(),
+                 br(),
+                 br(),
+                 img(src = "map.png", height = 400) )
                  #h4("This one is still in progress, hold tight")),
       )
     )
